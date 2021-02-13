@@ -2,24 +2,29 @@
 <title>{% block title %}Shemas{% endblock title %}</title>
 {% block content %}
 
-<h1 class='text-center'>Enter certificate number</h1>
+<h1 class='text-center float-left'>Data schemas</h1>
+<a href="{% url 'create_schema' %}" class="btn btn-success float-right"> New schema </a>
+
 
 
 <table class="table">
     <thead class="thead-dark">
         <tr>
-            <th>Name</th>
-            <th>Internal number</th>
-            <th>Public</th>
-            <th>Reviews</th>
+            <th>Title</th>
+            <th>Modified</th>
             <th>Actions</th>
         </tr>
     </thead>
     {% for schema in object_list %}
     <tr class="text-center ">
-        <td class="col-sm-2 alert-secondary"><span>
-            {{ schema }}
-        </span></td>
+        <td class="col-sm-2 alert-secondary"><a href="{% url 'edit_schema' schema.pk %}">
+            {{ schema.title }}
+        </a></td>
+        <td class="col-sm-2 alert-secondary">
+            {{schema.modified}}
+        </td>
+        <td class="col-sm-2 alert-secondary">
+        </td>
     </tr>
     {% empty %}
     <tr class="col-md-12 alert-secondary">

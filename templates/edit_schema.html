@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+<title>{% block title %}Shemas{% endblock title %}</title>
+{% block content %}
+
+<form method="post">
+
+    <!-- <h2>Add Certificat</h2> -->
+    {% csrf_token %}
+    <table class="tbl-td w-100 table table-sm">
+        {% for field in form %}
+        <tr class="border-2">
+            <td class="">
+                {{ field.errors }}
+                <label>{{ field.label }}</label>
+            </td>
+            <td class="border-0">
+                {{ field }}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <button class='btn btn-outline-success mx-5' type="submit">Save</button>
+</form>
+
+
+
+{% endblock content %}
