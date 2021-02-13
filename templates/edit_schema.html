@@ -6,6 +6,7 @@
 
     <!-- <h2>Add Certificat</h2> -->
     {% csrf_token %}
+    <button class='btn btn-outline-success mx-5 float-right' type="submit">Save</button>
     <table class="tbl-td w-100 table table-sm">
         {% for field in form %}
         <tr class="border-2">
@@ -22,9 +23,28 @@
         </tr>
         {% endfor %}
     </table>
-    <button class='btn btn-outline-success mx-5' type="submit">Save</button>
+    <table class="tbl-td w-100 table table-sm">
+        <tbody id="forms">
+            <div class="table_row">
+                <tr class="border-2">
+                    {% for field in form2 %}
+                    <td class="{{field.label}}">
+                        {{ field.errors }}
+                        <label>{{ field.label }}</label>
+                    </td>
+                    <td class="border-0">
+                        {{ field }}
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+            </div>
+        </tbody>
+    </table>
+
 </form>
-
-
+<button class='btn btn-outline-success mx-5' id="add-another">Add column</button>
 
 {% endblock content %}

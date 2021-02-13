@@ -5,6 +5,7 @@ from django.db import models
 class Schemas(models.Model):
 
     title = models.CharField(max_length=254)
+    fields = models.JSONField(default='dict')
     modified = models.DateField(auto_now=True)
     
 
