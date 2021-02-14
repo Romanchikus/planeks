@@ -3,6 +3,7 @@ from django.views.generic import *
 from .forms import ColumnSchemasForm
 from .models import *
 from django.urls import  reverse_lazy
+import json  
 
 class HomePage(ListView):
 
@@ -25,9 +26,22 @@ class SchemaParent():
         return context
     
     def form_valid(self, form):
-
-        print(self.request.POST.values)
+        response = dict(self.request.POST.lists())
+        form.instance.fields = self.convert_to_json(response)
+        form.save()
         return super().form_valid(form)
+
+    def convert_to_json(self, response):
+
+        dictionary = dict()
+        columns, types = response['column'], response['types']
+        for i, _ in enumerate(columns):
+            if columns[i] != '' and types[i] != '' :
+                dictionary[columns[i]] = types[i]
+        
+        if len(dictionary) == 0:
+            return 0
+        return json.dumps(dictionary)
 
 
 class SchemaCreate(SchemaParent, CreateView):
@@ -38,13 +52,3 @@ class SchemaCreate(SchemaParent, CreateView):
 class SchemaEdit(SchemaParent, UpdateView):
     
     pass
-
-    
-    
-class ColumnSchemasCreate(CreateView):
-
-    template_name = 'home.html'
-    form_class = ColumnSchemasForm
-    
-    
-    

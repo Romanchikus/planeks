@@ -1,19 +1,20 @@
 $(document).ready(function() {
 let form_count = Number($("[name=extra_field_count]").val());
-// get extra form count so we know what index to use for the next item.
 
-
-element = $( ".table_row" )
+table_row =  $( ".table_row" ).clone().attr('class', 'table_row_0')
+table_row.find("td").find("input").attr('required', false)
 
 $("#add-another").click(function() {
     form_count ++;
-    element.attr('class', 'type_name_' + form_count);
-    element.appendTo( "#forms")
-    console.log(element)
-    // build element and append it to our forms container
-
+    row = table_row.clone()
+    row.attr('class', 'table_row_' + form_count).appendTo( "#forms" );
+    
     $("[name=extra_field_count]").val(form_count);
-    // increment form count so our view knows to populate 
-    // that many fields for validation
 })
 });
+
+// function AddRenamedTag(type, obj) {
+//     element = $( "" + obj ).clone()
+//     element.attr('name', ('obj_' + obj,'obj_' + form_count));
+//     element.appendTo( "#forms" );
+//   }

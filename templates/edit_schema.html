@@ -25,22 +25,20 @@
     </table>
     <table class="tbl-td w-100 table table-sm">
         <tbody id="forms">
-            <div class="table_row">
-                <tr class="border-2">
-                    {% for field in form2 %}
-                    <td class="{{field.label}}">
-                        {{ field.errors }}
-                        <label>{{ field.label }}</label>
-                    </td>
-                    <td class="border-0">
-                        {{ field }}
-                        {% if field.help_text %}
-                        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
-                        {% endif %}
-                    </td>
-                    {% endfor %}
-                </tr>
-            </div>
+            <tr class="border-2 table_row">
+                {% for field in form2 %}
+                <td class="{{field.label}}">
+                    {{ field.errors }}
+                    <label>{{ field.label }}</label>
+                </td>
+                <td class="border-0 {{field.label}}">
+                    {{ field }}
+                    {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
         </tbody>
     </table>
 
