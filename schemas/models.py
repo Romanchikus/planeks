@@ -1,12 +1,16 @@
 from django.db import models
-
+import json
 
 
 class Schemas(models.Model):
 
     title = models.CharField(max_length=254)
-    fields = models.JSONField()
+    json_fields = models.JSONField()
     modified = models.DateField(auto_now=True)
+
+    def get_json_data(self):
+        return self.json_fields
+        
     
 
 class ColumnSchemas(models.Model):

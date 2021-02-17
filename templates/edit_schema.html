@@ -2,12 +2,16 @@
 <title>{% block title %}Shemas{% endblock title %}</title>
 {% block content %}
 
+
 <form method="post">
 
     <!-- <h2>Add Certificat</h2> -->
     {% csrf_token %}
     <button class='btn btn-outline-success mx-5 float-right' type="submit">Save</button>
     <table class="tbl-td w-100 table table-sm">
+        <input id='json_fields' hidden="true" value='{{json_fields}}'>
+        {{json_fields|json_script:"json_data"}}
+
         {% for field in form %}
         <tr class="border-2">
             <td class="">
@@ -23,8 +27,18 @@
         </tr>
         {% endfor %}
     </table>
+
+
     <table class="tbl-td w-100 table table-sm">
         <tbody id="forms">
+
+        </tbody>
+    </table>
+
+</form>
+<div class="add_column rounded bg-light align-middle rounded bg-light p-1">
+    <table class="tbl-td w-100 ">
+        <tbody id="column_example_row" class="">
             <tr class="border-2 table_row">
                 {% for field in form2 %}
                 <td class="{{field.label}}">
@@ -41,8 +55,7 @@
             </tr>
         </tbody>
     </table>
-
-</form>
+</div>
 <button class='btn btn-outline-success mx-5' id="add-another">Add column</button>
 
 {% endblock content %}

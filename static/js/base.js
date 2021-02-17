@@ -1,20 +1,28 @@
 $(document).ready(function() {
-let form_count = Number($("[name=extra_field_count]").val());
 
-table_row =  $( ".table_row" ).clone().attr('class', 'table_row_0')
-table_row.find("td").find("input").attr('required', false)
+    var data = JSON.parse(document.getElementById('json_data').textContent);;
+    console.log(data)
+
+
+    
+    for (var key in data) {
+        column_data =  $( ".table_row" ).clone().attr('class', 'table_row_' + key)
+        if (data.hasOwnProperty(key)) { // this will check if key is owned by data object and not by any of it's ancestors
+        column_data.find("td").find("input").attr('value', key)
+        column_data.find("td").find("select").val( data[key])
+            $( "#forms" ).append( column_data);
+        }
+    }
+
 
 $("#add-another").click(function() {
-    form_count ++;
-    row = table_row.clone()
-    row.attr('class', 'table_row_' + form_count).appendTo( "#forms" );
+    row =  $( ".table_row" ).clone()
+    row.find('select').val($( ".table_row" ).find('select').val())
+    row.attr('class', 'table_row_').appendTo( "#forms" );
+    $( ".table_row" ).find("td").find("input").val('');
+    $( ".table_row" ).find("td").find("select").val('');
     
-    $("[name=extra_field_count]").val(form_count);
 })
-});
 
-// function AddRenamedTag(type, obj) {
-//     element = $( "" + obj ).clone()
-//     element.attr('name', ('obj_' + obj,'obj_' + form_count));
-//     element.appendTo( "#forms" );
-//   }
+
+});
