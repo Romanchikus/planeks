@@ -18,12 +18,16 @@
     {% for schema in object_list %}
     <tr class="text-center ">
         <td class="col-sm-2 alert-secondary"><a href="{% url 'edit_schema' schema.pk %}">
-            {{ schema.title }}
-        </a></td>
+                {{ schema.title }}
+            </a></td>
         <td class="col-sm-2 alert-secondary">
             {{schema.modified}}
         </td>
         <td class="col-sm-2 alert-secondary">
+            <a class="btn btn-danger mx-1 my-1 btn-sm " href="{% url 'delete_schema' schema.pk %}" role="button">
+                <span class="oi oi-trash"></span></a>
+            <a class="btn btn-warning  btn-sm  mx-1 my-1" href="{% url 'edit_schema' schema.pk %}" role="button">
+                <span class="oi oi-pencil "></span></a>
         </td>
     </tr>
     {% empty %}

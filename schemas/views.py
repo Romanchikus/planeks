@@ -24,14 +24,13 @@ class SchemaParent():
         context = super().get_context_data(**kwargs)
         if 'form2' not in context:
             context['form2'] = self.second_form_class()
-        context['json_fields'] = ast.literal_eval(self.get_object().json_fields)
         return context
     
     def form_valid(self, form):
         response = dict(self.request.POST.lists())
-        form.instance.json_fields = self.convert_to_json(response)
+        if response.get('column'):
+            form.instance.json_fields = self.convert_to_json(response)
         form.save()
-        print(dict(self.request.POST.lists()))
         return super().form_valid(form)
 
     def convert_to_json(self, response):
@@ -48,6 +47,7 @@ class SchemaParent():
         
         if len(dictionary) == 0:
             return 0
+        print(dictionary)
         return json.dumps(dictionary)
 
 
@@ -58,4 +58,18 @@ class SchemaCreate(SchemaParent, CreateView):
 
 class SchemaEdit(SchemaParent, UpdateView):
     
-    pass
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.get_object().json_fields:
+            context['json_fields'] = ast.literal_eval(self.get_object().json_fields)
+        return context
+
+class SchemaDelete(DeleteView):
+
+    model = Schemas
+    template_name = 'confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy("home")
+
+    
