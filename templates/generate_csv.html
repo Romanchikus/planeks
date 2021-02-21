@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+<title>{% block title %}Shemas{% endblock title %}</title>
+{% block content %}
+
+<h1 class='text-center float-left'>Data sets</h1>
+<form class='col-md-6 offset-3' action="{% url 'generate' %}" method="post">
+    {{pk}}
+    {% csrf_token %}
+    <input type="number" hidden name="pk" value="{{pk}}">
+    <input type="number" name='iters'>
+    <button class='btn btn-success float-right"' type="submit">New csv</button>
+</form>
+
+
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>#</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    {% for csv in object_list %}
+    <tr class="text-center ">
+        <td class="col-sm-2 alert-secondary"><a href="">
+                {{ csv.id }}
+            </a></td>
+        <td class="col-sm-2 alert-secondary"><a href="">
+                {{ csv.created }}
+            </a></td>
+        <td class="col-sm-2 alert-secondary">
+            {{csv.status}}
+        </td>
+        <td class="col-sm-2 alert-secondary">
+            {% if csv.csv.name  %}
+            <a class="btn btn-danger mx-1 my-1 btn-sm " href="{{ csv.csv.url }}" role="button">
+                <span class="oi oi-data-transfer-download"></span></a>
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr class="col-md-12 alert-secondary">
+        <td colspan="5">No csv yet.</td>
+    </tr>
+</table>
+{% endfor %}
+
+
+
+
+{% endblock content %}

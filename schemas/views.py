@@ -1,15 +1,26 @@
 from django.shortcuts import render
 from django.views.generic import *
-from .forms import ColumnSchemasForm
+from .forms import ColumnSchemasForm, CustomUserCreationForm
 from .models import *
-from django.urls import  reverse_lazy
+from django.urls import  reverse_lazy, reverse
 import json  
 import ast
+from django.shortcuts import get_object_or_404
+
+from django.http import  HttpResponseRedirect
+from planeks.tasks import hello_world
 
 class HomePage(ListView):
 
     model = Schemas
     template_name = 'home.html'
+
+
+class SignupPageView(CreateView):
+    
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'signup.html'
 
 class SchemaParent():
 
@@ -71,5 +82,44 @@ class SchemaDelete(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("home")
+
+from datetime import datetime 
+
+class GenerateCsv(View):
+
+    template_name = 'generate_csv.html'
+
+
+    def post(self, request, *args, **kwargs):
+        pk= request.POST.get('pk')
+        schemas = get_object_or_404(Schemas, pk=pk)
+        iters = request.POST.get('iters')
+        print(iters)
+        gen = schemas.generatedschema_set.create()
+        data = json.loads(schemas.get_json_data())
+        hello_world.delay(title=schemas.title, date=gen.created,
+            data=(data), iters=iters, pk=gen.pk)
+        gen.save()
+
+        return HttpResponseRedirect(reverse("list_csv",
+                                        kwargs={'pk':pk},
+                                    )
+                            )
+
+
+class ListCsvSchemas(ListView):
+
+    template_name = 'generate_csv.html'
+
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs['pk']
+        return context
+
+    def get_queryset(self):
+        schemas = get_object_or_404(Schemas, pk=self.kwargs['pk'])
+        gen = schemas.generatedschema_set.all()
+        return gen
 
     

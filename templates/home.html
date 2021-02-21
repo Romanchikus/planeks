@@ -17,7 +17,7 @@
     </thead>
     {% for schema in object_list %}
     <tr class="text-center ">
-        <td class="col-sm-2 alert-secondary"><a href="{% url 'edit_schema' schema.pk %}">
+        <td class="col-sm-2 alert-secondary"><a href="{% url 'list_csv' schema.pk %}">
                 {{ schema.title }}
             </a></td>
         <td class="col-sm-2 alert-secondary">
@@ -32,7 +32,7 @@
     </tr>
     {% empty %}
     <tr class="col-md-12 alert-secondary">
-        <td colspan="5">No certificates yet.</td>
+        <td colspan="5">No shemas yet.</td>
     </tr>
 </table>
 {% endfor %}

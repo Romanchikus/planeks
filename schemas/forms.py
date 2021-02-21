@@ -1,12 +1,26 @@
 from django import forms
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+
 GEEKS_CHOICES =( 
-    ("int", "Integer"), 
-    ("float", "Float"), 
-    ("date", "Date"), 
-    ("email", "Email"), 
-    ("str", "String"), 
+    ("name", "Name"), 
+    ("job", "Job"), 
+    ("domain_name", "Domain name"), 
+    ("phone_number", "Phone number"), 
+    ("company", "Company name"), 
+    ("text", "Text"), 
+    ("random_int", "Integer"), 
+    ("ascii_email", "Email"), 
+    ("address", "Address"), 
+    ("date_time", "Date"),
 ) 
+
+class CustomUserCreationForm(UserCreationForm):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('email', 'username',)
 
 class ColumnSchemasForm(forms.Form):
 

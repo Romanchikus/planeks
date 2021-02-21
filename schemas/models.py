@@ -15,9 +15,15 @@ class Schemas(models.Model):
         return self.title
     
         
-    
+def content_file_name(instance, filename):
+    return '/'.join(['content', filename])
 
-class ColumnSchemas(models.Model):
+class GeneratedSchema(models.Model):
 
-    id = models.OneToOneField('Schemas', on_delete=models.CASCADE, primary_key=True)
-    field = models.JSONField(default='dict')
+    schemas = models.ForeignKey(Schemas, on_delete=models.CASCADE)
+    created = models.DateField(auto_now=True)
+    csv = models.FileField(upload_to=content_file_name,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+    class Meta:
+        index_together = [('created', 'schemas')]

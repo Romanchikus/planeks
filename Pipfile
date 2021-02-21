@@ -11,6 +11,8 @@ psycopg2-binary = "==2.8.6"
 dj-database-url = "*"
 gunicorn = "*"
 whitenoise = "*"
+celery = {extras = ["redis"], version = "*"}
+faker = "*"
 
 [requires]
 python_version = "3.8"
