@@ -24,9 +24,9 @@ COPY Pipfile Pipfile.lock ./
 RUN pipenv install --system --deploy --ignore-pipfile
 
 # Set work directory
-WORKDIR /certificate
-COPY . /certificate
+WORKDIR /planeks
+COPY . /planeks
 
 RUN python manage.py collectstatic --noinput
 # run gunicorn
-CMD pipenv gunicorn certificate.wsgi:application --bind 0.0.0.0:$PORT
+CMD pipenv gunicorn planeks.wsgi:application --bind 0.0.0.0:$PORT & celery worker --app=planeks.tasks
