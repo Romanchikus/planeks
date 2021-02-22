@@ -15,7 +15,7 @@ SECRET_KEY = '%kzwttsu_@q(r#h6bx9fzrty&-+r460h1%m6fq%5(p-!+-zm^o'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://planeks13.herokuapp.com/','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['planeks13.herokuapp.com','https://planeks13.herokuapp.com/','http://planeks13.herokuapp.com/','localhost','127.0.0.1']
 
 
 # Application definition
