@@ -29,4 +29,4 @@ COPY . /planeks
 
 RUN python manage.py collectstatic --noinput
 # run gunicorn
-CMD pipenv gunicorn planeks.wsgi:application --bind 0.0.0.0:$PORT & celery worker --app=planeks.tasks
+CMD pipenv gunicorn planeks.wsgi:application --bind 0.0.0.0:$PORT & pipenv run celery -A planeks.celery worker -l info
