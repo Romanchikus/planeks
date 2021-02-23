@@ -5,7 +5,7 @@ import json
 class Schemas(models.Model):
 
     title = models.CharField(max_length=254)
-    json_fields = models.JSONField(default={})
+    json_fields = models.JSONField()
     modified = models.DateField(auto_now=True)
 
     def get_json_data(self):
