@@ -30,6 +30,14 @@
 
 
     <table class="tbl-td w-100 table table-sm">
+        <thead class="">
+            <tr>
+                <th>Column</th>
+                <th>Type</th>
+                <th>Range</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
         <tbody id="forms">
 
         </tbody>
@@ -39,12 +47,8 @@
 <div class="add_column rounded bg-light align-middle rounded bg-light p-1">
     <table class="tbl-td w-100 ">
         <tbody id="column_example_row" class="">
-            <tr class="border-2 table_row">
+            <tr class="border-2 col_row table_row">
                 {% for field in form2 %}
-                <td class="{{field.label}}">
-                    {{ field.errors }}
-                    <label>{{ field.label }}</label>
-                </td>
                 <td class="border-0 {{field.label}}">
                     {{ field }}
                     {% if field.help_text %}
@@ -52,6 +56,13 @@
                     {% endif %}
                 </td>
                 {% endfor %}
+
+                <td class="range_td" >
+                    <div class="range_hidden" hidden>
+                        <input type="number" id='ran_from' name='ran_from' class="w-25">
+                        <input type="number" id='ran_from_to' name='ran_from_to' class="w-25">
+                    </div>
+                </td>
 
                 <td class="hidden_td" hidden>
                     <div class="btn btn-danger mx-1 my-1 btn-sm hidden_btn">

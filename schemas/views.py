@@ -47,12 +47,13 @@ class SchemaParent():
     def convert_to_json(self, response):
 
         dictionary = dict()
-        columns, types = response['column'], response['types']
-        print(columns,types)
+        columns, types, ran_from , ran_from_to = (response['column'],
+         response['types'], response['ran_from'], response['ran_from_to'])
+        print(response)
         try:
             for i, _ in enumerate(columns):
                 if columns[i] != '' and types[i] != '' :
-                    dictionary[columns[i]] = types[i]
+                    dictionary[columns[i]] = [ types[i], ran_from[i] , ran_from_to[i] ]
         except IndexError:
             pass
         
@@ -94,9 +95,9 @@ class GenerateCsv(View):
         pk= request.POST.get('pk')
         schemas = get_object_or_404(Schemas, pk=pk)
         iters = request.POST.get('iters')
-        print(iters)
         gen = schemas.generatedschema_set.create()
         data = json.loads(schemas.get_json_data())
+        print(data)
         hello_world.delay(title=schemas.title, date=gen.created,
             data=(data), iters=iters, pk=gen.pk)
         gen.save()

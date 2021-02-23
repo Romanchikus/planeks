@@ -14,6 +14,7 @@ GEEKS_CHOICES =(
     ("ascii_email", "Email"), 
     ("address", "Address"), 
     ("date_time", "Date"),
+    ("age", "Age"),
 ) 
 
 class CustomUserCreationForm(UserCreationForm):

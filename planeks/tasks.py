@@ -23,7 +23,25 @@ def hello_world(title, date, data, iters, pk):
         iters = int(iters)+1
         for _ in range(iters):
             for col in fieldnames:
-                row[col] = getattr(Faker(), data[col])()
+                if data[col][0] != 'age':
+                    row[col] = getattr(Faker(), data[col][0])()
+                else:
+                    col_min, col_max = data[col][1], data[col][2]
+                    try:
+                        col_min = int(col_min)
+                        if col_min < 0:
+                            col_min = 0
+                    except (ValueError, TypeError):
+                        col_min = 0
+                    try:
+                        col_max = int(col_max)
+                        if col_max < 0:
+                            col_max = 100
+                    except (ValueError, TypeError):
+                        col_max = 100
+
+                    row[col] = Faker().random_int(min=col_min, max=col_max)
+
             writer.writerow(row)
         del row
         gen = GeneratedSchema.objects.get(pk=pk)

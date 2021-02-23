@@ -2,13 +2,12 @@
 <title>{% block title %}Shemas{% endblock title %}</title>
 {% block content %}
 
-<h1 class='text-center float-left'>Data sets</h1>
-<form class='col-md-6 offset-3' action="{% url 'generate' %}" method="post">
-    {{pk}}
+<h3 class='text-center float-left'>Data sets</h3>
+<form class=' d-flex justify-content-end' action="{% url 'generate' %}" method="post">
     {% csrf_token %}
-    <input type="number" hidden name="pk" value="{{pk}}">
-    <input type="number" name='iters'>
-    <button class='btn btn-success float-right"' type="submit">New csv</button>
+    <input type="number" hidden name="pk" value="{{pk}}" >
+    <input type="number" name='iters' class="w-25 float-right">
+    <button class='btn btn-success float-right  mx-1' type="submit">New csv</button>
 </form>
 
 
@@ -24,14 +23,18 @@
     </thead>
     {% for csv in object_list %}
     <tr class="text-center ">
-        <td class="col-sm-2 alert-secondary"><a href="">
+        <td class="alert-secondary"><a href="">
                 {{ csv.id }}
             </a></td>
         <td class="col-sm-2 alert-secondary"><a href="">
-                {{ csv.created }}
+                {{ csv.created|date:"D d M Y" }}
             </a></td>
         <td class="col-sm-2 alert-secondary">
-            {{csv.status}}
+            {% if csv.status  %}
+            <span class="progress-bar bg-success">Ready</span>
+            {% else %}
+            <span class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">Processing</span>
+            {% endif %}
         </td>
         <td class="col-sm-2 alert-secondary">
             {% if csv.csv.name  %}
