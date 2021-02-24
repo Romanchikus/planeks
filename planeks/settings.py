@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'users.apps.UsersConfig',
     'schemas',
 ]
 
@@ -112,7 +111,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-AUTH_USER_MODEL = "users.CustomUser"
+# AUTH_USER_MODEL = "User"
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

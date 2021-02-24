@@ -32,7 +32,7 @@ $("#add-another").click(function() {
     $( ".table_row" ).find("td").find("input").val('');
     $( ".table_row" ).find("td").find("select").val('');
     row.find(".hidden_td").attr('hidden', false)
-    row.find("td").find("input").attr('required', true)
+    row.find("td").find(".Column").find("input").attr('required', true)
     
 })
 

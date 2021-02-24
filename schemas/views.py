@@ -9,11 +9,18 @@ from django.shortcuts import get_object_or_404
 
 from django.http import  HttpResponseRedirect
 from planeks.tasks import hello_world
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class HomePage(ListView):
+
+class HomePage(LoginRequiredMixin, ListView):
+
 
     model = Schemas
     template_name = 'home.html'
+
+    def get_queryset(self):
+        schemas = Schemas.objects.filter(admin=self.request.user)
+        return schemas
 
 
 class SignupPageView(CreateView):
@@ -22,7 +29,7 @@ class SignupPageView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
 
-class SchemaParent():
+class SchemaParent(LoginRequiredMixin):
 
     model = Schemas
     template_name = 'edit_schema.html'
@@ -41,8 +48,10 @@ class SchemaParent():
         response = dict(self.request.POST.lists())
         if response.get('column'):
             form.instance.json_fields = self.convert_to_json(response)
+        form.instance.admin = self.request.user
         form.save()
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        return response
 
     def convert_to_json(self, response):
 
@@ -64,36 +73,44 @@ class SchemaParent():
 
 
 class SchemaCreate(SchemaParent, CreateView):
-
+    
     pass
     
 
-class SchemaEdit(SchemaParent, UpdateView):
+class SchemaEdit( SchemaParent, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.get_object().json_fields:
             context['json_fields'] = ast.literal_eval(self.get_object().json_fields)
+        if self.object.admin != self.request.user:
+            return self.handle_no_permission()
         return context
+    
 
-class SchemaDelete(DeleteView):
+class SchemaDelete(LoginRequiredMixin, DeleteView):
 
     model = Schemas
     template_name = 'confirm_delete.html'
 
     def get_success_url(self):
         return reverse_lazy("home")
+    
+    def get_context_data(self, **kwargs):        
+        if self.object.admin != self.request.user:
+            return self.handle_no_permission()
+        return super().get_context_data(**kwargs)
 
-from datetime import datetime 
 
-class GenerateCsv(View):
+class GenerateCsv( LoginRequiredMixin, View):
 
     template_name = 'generate_csv.html'
-
 
     def post(self, request, *args, **kwargs):
         pk= request.POST.get('pk')
         schemas = get_object_or_404(Schemas, pk=pk)
+        if schemas.admin != self.request.user:
+            return self.handle_no_permission()
         iters = request.POST.get('iters')
         gen = schemas.generatedschema_set.create()
         data = json.loads(schemas.get_json_data())
@@ -108,10 +125,9 @@ class GenerateCsv(View):
                             )
 
 
-class ListCsvSchemas(ListView):
+class ListCsvSchemas(LoginRequiredMixin, ListView):
 
     template_name = 'generate_csv.html'
-
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -120,6 +136,8 @@ class ListCsvSchemas(ListView):
 
     def get_queryset(self):
         schemas = get_object_or_404(Schemas, pk=self.kwargs['pk'])
+        if schemas.admin != self.request.user:
+            return self.handle_no_permission()
         gen = schemas.generatedschema_set.all()
         return gen
 
