@@ -121,7 +121,6 @@ class GenerateCsv( LoginRequiredMixin, View):
             hello_world.delay(title=schemas.title, date=gen.created,
                 data=(data), iters=iters, pk=gen.pk)
             gen.save()
-
         return HttpResponseRedirect(reverse("list_csv",
                                         kwargs={'pk':pk},
                                     )
