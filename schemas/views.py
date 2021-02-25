@@ -48,6 +48,8 @@ class SchemaParent(LoginRequiredMixin):
         response = dict(self.request.POST.lists())
         if response.get('column'):
             form.instance.json_fields = self.convert_to_json(response)
+        else:
+            form.instance.json_fields = 0
         form.instance.admin = self.request.user
         form.save()
         response = super().form_valid(form)
@@ -65,7 +67,7 @@ class SchemaParent(LoginRequiredMixin):
                     dictionary[columns[i]] = [ types[i], ran_from[i] , ran_from_to[i] ]
         except IndexError:
             pass
-        
+        print('len(dictionary)', len(dictionary))
         if len(dictionary) == 0:
             return 0
         print(dictionary)
@@ -111,13 +113,14 @@ class GenerateCsv( LoginRequiredMixin, View):
         schemas = get_object_or_404(Schemas, pk=pk)
         if schemas.admin != self.request.user:
             return self.handle_no_permission()
-        iters = request.POST.get('iters')
-        gen = schemas.generatedschema_set.create()
-        data = json.loads(schemas.get_json_data())
-        print(data)
-        hello_world.delay(title=schemas.title, date=gen.created,
-            data=(data), iters=iters, pk=gen.pk)
-        gen.save()
+        if schemas.json_fields != 0:
+            iters = request.POST.get('iters')
+            gen = schemas.generatedschema_set.create()
+            data = json.loads(schemas.get_json_data())
+            print(data)
+            hello_world.delay(title=schemas.title, date=gen.created,
+                data=(data), iters=iters, pk=gen.pk)
+            gen.save()
 
         return HttpResponseRedirect(reverse("list_csv",
                                         kwargs={'pk':pk},
